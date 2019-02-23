@@ -1,0 +1,38 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.21'
+}
+
+group 'io.github.magdkudama'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    jUnitVersion = '5.4.0'
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:1.3.21"
+
+    testCompile "org.junit.jupiter:junit-jupiter-api:${jUnitVersion}"
+    testCompile "org.junit.jupiter:junit-jupiter-params:${jUnitVersion}"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:${jUnitVersion}"
+}
+
+test {
+    useJUnitPlatform {
+        includeEngines 'junit-jupiter'
+        failFast = true
+    }
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
