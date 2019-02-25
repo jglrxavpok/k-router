@@ -4,6 +4,7 @@ import io.github.magdkudama.krouter.Method.*
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class RouteMatcherTest {
@@ -96,6 +97,22 @@ class RouteMatcherTest {
 
         assertEquals("route1", matcher.match("/foo/3/bar", GET).name)
         assertEquals("route2", matcher.match("/foo/abcd/bar", GET).name)
+    }
+
+    @Test
+    fun `dynamic route parameters are populated`() {
+        val matcher = RouteMatcher(
+            setOf(
+                Route("route1", "/foo/{id1}/{id2}/bar", mapOf(), setOf(GET))
+            )
+        )
+
+        val match = matcher.match("/foo/3/4/bar", GET)
+        assertEquals("route1", match.name)
+        assertNotNull(match.pathParams)
+
+        assertEquals("3", match.pathParams!!["id1"])
+        assertEquals("4", match.pathParams!!["id2"])
     }
 
     @Test
