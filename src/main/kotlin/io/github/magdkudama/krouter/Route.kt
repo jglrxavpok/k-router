@@ -18,7 +18,11 @@ enum class Method(val key: Int) {
     DELETE(4)
 }
 
-class Route(val name: String, val path: String, req: Map<String, String>, private val methods: Set<Method>) {
+interface RouteHandler {
+    operator fun invoke(context: Any, params: Map<String, String>): RouteResponse
+}
+
+open class Route(val name: String, val path: String, req: Map<String, String>, private val methods: Set<Method>, val handler: RouteHandler? = null) {
     companion object {
         @JvmStatic
         val PATTERN: Pattern = Pattern.compile("\\{(\\w+)}")
@@ -65,7 +69,7 @@ class Route(val name: String, val path: String, req: Map<String, String>, privat
             requirements.add(Pair(match, regex))
         }
 
-        dynamic = !requirements.isEmpty()
+        dynamic = requirements.isNotEmpty()
     }
 
     override fun equals(other: Any?): Boolean {
@@ -81,5 +85,9 @@ class Route(val name: String, val path: String, req: Map<String, String>, privat
 
     override fun hashCode(): Int {
         return name.hashCode()
+    }
+
+    override fun toString(): String {
+        return name
     }
 }

@@ -2,9 +2,9 @@ package io.github.magdkudama.krouter
 
 import java.util.regex.Pattern
 
-data class RouteMatch(val name: String, val pathParams: Map<String, String>? = null)
+data class RouteMatch(val route: Route, val pathParams: Map<String, String> = emptyMap())
 
-class RouteMatcher(routes: Set<Route>) {
+class RouteMatcher(vararg routes: Route) {
     private val dynamicRoutes: MutableList<Route> = mutableListOf()
     private val dynamicRoutesPattern: Pattern
     private val dynamicRoutesRegexGroupPositions: MutableMap<Int, List<Int>> = mutableMapOf()
@@ -47,7 +47,7 @@ class RouteMatcher(routes: Set<Route>) {
         if (path in staticRoutes) {
             val methods = staticRoutes.getValue(path)
             if (method.key in methods) {
-                return RouteMatch(methods.getValue(method.key).name)
+                return RouteMatch(methods.getValue(method.key))
             } else {
                 throw RouteNotFoundException("Route '$path' has not been found")
             }
@@ -70,7 +70,7 @@ class RouteMatcher(routes: Set<Route>) {
                 }
 
                 if (allOk) {
-                    return RouteMatch(route.name, pathParams)
+                    return RouteMatch(route, pathParams)
                 }
             }
         }
