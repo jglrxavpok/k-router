@@ -1,5 +1,7 @@
 package io.github.magdkudama.krouter
 
+import java.lang.Exception
+
 interface RouteResponse
 
 class InvalidRouteResponse(val path: String, val method: Method, val message: String): RouteResponse
@@ -13,7 +15,7 @@ open class Router(val matcher: RouteMatcher) {
                 throw RouteNotFoundException(path)
             }
             result.route.handler.invoke(context, result.pathParams)
-        } catch (e: RouteNotFoundException) {
+        } catch (e: Exception) {
             invalidRoute(path, method, e.message!!)
         }
     }
